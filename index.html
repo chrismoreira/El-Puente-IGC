@@ -1156,9 +1156,6 @@ document.addEventListener('click',e=>{
   if(e.target.closest('#btn-restart'))goTo(0,true);
 });
 
-// ── AUTO-ADVANCE SPLASH ──────────────────────────────────────────
-setTimeout(()=>{if(current===0)goTo(1);},2200);
-
 // ── START ────────────────────────────────────────────────────────
 goTo(0,true);
 
