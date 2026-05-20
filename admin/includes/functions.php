@@ -16,8 +16,12 @@ function settings_all(): array {
     return db_all('SELECT * FROM settings ORDER BY `group`, label');
 }
 
-function setting_save(string $key, string $value): void {
+function setting_save(string $key, string $value, string $user_name = ''): void {
+    $current = db_get('SELECT value, label FROM settings WHERE `key` = ?', [$key]);
+    if (!$current || $current['value'] === $value) return;
     db_run('UPDATE settings SET value = ? WHERE `key` = ?', [$value, $key]);
+    db_run('INSERT INTO settings_log (user_name, setting_key, setting_label, old_value, new_value) VALUES (?,?,?,?,?)',
+        [$user_name, $key, $current['label'] ?? $key, $current['value'], $value]);
 }
 
 function encrypt(string $plain): string {
