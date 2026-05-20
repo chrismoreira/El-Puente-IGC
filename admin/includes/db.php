@@ -14,7 +14,7 @@ function db(): PDO {
     return $pdo;
 }
 
-function db_get(string $sql, array $params = []): array|false {
+function db_get(string $sql, array $params = []) {
     $st = db()->prepare($sql);
     $st->execute($params);
     return $st->fetch();
