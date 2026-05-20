@@ -1094,7 +1094,8 @@ document.addEventListener('touchstart',e=>{
   if(e.touches.length!==1)return;
   tx0=e.touches[0].clientX;
   ty0=e.touches[0].clientY;
-  touchOnInteractive=!!e.target.closest('.btn-restart,.pedro-btn,.badge,[data-verse],#modal');
+  touchOnInteractive=!!e.target.closest('.btn-restart,.pedro-btn,.badge,.badges-area,[data-verse],#modal')
+    || document.getElementById('modal').classList.contains('open');
   dragging=true;
   moved=false;
 },{passive:true});
@@ -1121,7 +1122,8 @@ document.addEventListener('touchend',e=>{
 let mx0=0, mdragging=false, mmoved=false, mouseOnInteractive=false;
 document.addEventListener('mousedown',e=>{
   mx0=e.clientX;mdragging=true;mmoved=false;
-  mouseOnInteractive=!!e.target.closest('.btn-restart,.pedro-btn,.badge,[data-verse],#modal');
+  mouseOnInteractive=!!e.target.closest('.btn-restart,.pedro-btn,.badge,.badges-area,[data-verse],#modal')
+    || document.getElementById('modal').classList.contains('open');
 });
 document.addEventListener('mousemove',e=>{if(mdragging&&!mouseOnInteractive&&Math.abs(e.clientX-mx0)>8)mmoved=true;});
 document.addEventListener('mouseup',e=>{
@@ -1141,8 +1143,9 @@ document.addEventListener('keydown',e=>{
 
 // ── CLICK TO ADVANCE (tap right half) ───────────────────────────
 document.addEventListener('click',e=>{
-  // don't trigger on buttons/badges
-  if(e.target.closest('.btn-restart,.pedro-btn,.badge,[data-verse]'))return;
+  // don't trigger on buttons/badges/badge area/modal
+  if(e.target.closest('.btn-restart,.pedro-btn,.badge,.badges-area,[data-verse],#modal'))return;
+  if(document.getElementById('modal').classList.contains('open'))return;
   if(typeof mmoved!=='undefined'&&mmoved)return;
   const x=e.clientX,w=window.innerWidth;
   if(x>w*0.6)goTo(current+1);
