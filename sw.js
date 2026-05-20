@@ -1,4 +1,4 @@
-const CACHE = 'el-puente-v6';
+const CACHE = 'el-puente-v7';
 const ASSETS = ['/', '/index.html', '/manifest.json', '/icon.svg'];
 
 self.addEventListener('install', e => {
