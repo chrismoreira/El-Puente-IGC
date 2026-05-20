@@ -22,6 +22,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && $id) {
     redirect(ADMIN_URL . '/contacts.php');
 }
 
+// CSV Export
+if ($action === 'export') {
+    $search = trim($_GET['q'] ?? '');
+    $status = $_GET['status'] ?? '';
+    $where  = '1=1';
+    $params = [];
+    if ($search) { $where .= ' AND (name LIKE ? OR whatsapp LIKE ? OR email LIKE ?)'; $params = array_merge($params, ["%$search%", "%$search%", "%$search%"]); }
+    if ($status) { $where .= ' AND status = ?'; $params[] = $status; }
+    $rows = db_all("SELECT name, whatsapp, email, status, notes, created_at FROM contacts WHERE $where ORDER BY created_at DESC", $params);
+
+    $filename = 'contactos-el-puente-' . date('Y-m-d') . '.csv';
+    header('Content-Type: text/csv; charset=UTF-8');
+    header('Content-Disposition: attachment; filename="' . $filename . '"');
+    header('Pragma: no-cache');
+    echo "\xEF\xBB\xBF"; // BOM para Excel
+    $out = fopen('php://output', 'w');
+    fputcsv($out, ['Nombre', 'WhatsApp', 'Email', 'Estado', 'Notas', 'Fecha']);
+    foreach ($rows as $r) {
+        fputcsv($out, [
+            $r['name'], $r['whatsapp'], $r['email'],
+            $r['status'], $r['notes'],
+            date('d/m/Y H:i', strtotime($r['created_at']))
+        ]);
+    }
+    fclose($out);
+    exit;
+}
+
 // Delete
 if ($action === 'delete' && $id) {
     db_run('DELETE FROM contacts WHERE id = ?', [$id]);
@@ -104,6 +132,7 @@ layout_head('Contactos');
     </select>
     <button type="submit" class="btn btn-teal">Filtrar</button>
     <?php if ($search || $status): ?><a href="contacts.php" class="btn btn-ghost">Limpiar</a><?php endif; ?>
+    <a href="?action=export&q=<?= urlencode($search) ?>&status=<?= urlencode($status) ?>" class="btn btn-ghost">Exportar CSV</a>
   </form>
 
   <div class="card">
