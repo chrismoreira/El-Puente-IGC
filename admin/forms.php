@@ -70,7 +70,7 @@ layout_head('Formularios y reCAPTCHA');
           </div>
           <div class="form-group">
             <label>Secret Key (privada)</label>
-            <input type="password" name="recaptcha_secret_key" placeholder="<?= !empty($cfg['recaptcha_secret_key']) ? '••••••••' : '' ?>">
+            <input type="password" name="recaptcha_secret_key" value="<?= e($cfg['recaptcha_secret_key'] ?? '') ?>" placeholder="Pegar secret key aquí">
           </div>
         </div>
       </div>
