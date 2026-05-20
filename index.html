@@ -1028,6 +1028,20 @@ function buildEnd(){
   return d;
 }
 
+// ── THEME FROM API ───────────────────────────────────────────────
+(function loadTheme(){
+  const MAP = {
+    color_orange:'--orange', color_pink:'--pink',
+    color_teal:'--teal', color_teal_dark:'--teal-dark'
+  };
+  fetch('/api/settings.php').then(r=>r.json()).then(cfg=>{
+    const root = document.documentElement.style;
+    Object.entries(MAP).forEach(([key,cssVar])=>{
+      if(cfg[key]) root.setProperty(cssVar, cfg[key]);
+    });
+  }).catch(()=>{/* usa defaults CSS si el API falla */});
+})();
+
 // ── INIT ─────────────────────────────────────────────────────────
 const counter=document.getElementById('counter');
 let current=0;
