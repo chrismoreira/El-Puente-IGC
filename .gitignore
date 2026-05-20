@@ -3,3 +3,6 @@
 .gstack/
 Archive.zip
 apk-extracted/
+admin/includes/config.php
+admin/vendor/
+composer.phar
